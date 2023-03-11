@@ -28,13 +28,20 @@ def crop_img(img, target_size: tuple[int, int] = (512, 512)):
 
     face_cascade = cv2.CascadeClassifier(
         cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')  # 加载人脸检测模型
+
+    eye_cascade = cv2.CascadeClassifier(
+        cv2.data.haarcascades+'haarcascade_eye.xml')
+
     gray = cv2.cvtColor(cv2_img, cv2.COLOR_BGR2GRAY)  # 转换为灰度图
     faces = face_cascade.detectMultiScale(gray, 1.3, 5)  # 检测人脸
-    
+    eyes = []
     if len(faces) == 0:
+        eyes = eye_cascade.detectMultiScale(gray)
+
+    if len(faces) == 0 and len(eyes) == 0:
         print(f"no face detected in image {img}")
         return
-    (x, y, w, h) = faces[0]
+    (x, y, w, h) = faces[0] if len(faces) != 0 else eyes[0]
     if height < width:
         y = 0
         h = height
