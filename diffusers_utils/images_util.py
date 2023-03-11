@@ -13,7 +13,10 @@ def image_grid(imgs: list[Image.Image], rows: int, cols: int) -> Image.Image:
     return grid
 
 
-def crop_img(img: str | Image.Image, target_size: tuple[int, int] = (512, 512)):
+def crop_img(img, target_size: tuple[int, int] = (512, 512)):
+    '''
+    img: str | Image.Image
+    '''
     if isinstance(img, str):
         img = cv2.imread(img)  # 读取图片
     else:
