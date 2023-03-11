@@ -18,18 +18,19 @@ def crop_img(img, target_size: tuple[int, int] = (512, 512)):
     img: str | Image.Image
     '''
     if isinstance(img, str):
-        img = cv2.imread(img)  # 读取图片
+        cv2_img = cv2.imread(img)  # 读取图片
     else:
-        img = cv2.cvtColor(numpy.array(img), cv2.COLOR_RGB2BGR)
+        cv2_img = cv2.cvtColor(numpy.array(img), cv2.COLOR_RGB2BGR)
 
-    (height, width, _) = img.shape
+    (height, width, _) = cv2_img.shape
 
     t_img_len = height if height < width else width
 
     face_cascade = cv2.CascadeClassifier(
         cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')  # 加载人脸检测模型
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # 转换为灰度图
+    gray = cv2.cvtColor(cv2_img, cv2.COLOR_BGR2GRAY)  # 转换为灰度图
     faces = face_cascade.detectMultiScale(gray, 1.3, 5)  # 检测人脸
+    
     if len(faces) == 0:
         print(f"no face detected in image {img}")
         return
@@ -45,6 +46,6 @@ def crop_img(img, target_size: tuple[int, int] = (512, 512)):
         y = max(0, (y + h // 2) - width // 2)
         h = width
 
-    crop_img = img[y:y+h, x:x+w]  # 裁剪人脸区域
+    crop_img = cv2_img[y:y+h, x:x+w]  # 裁剪人脸区域
     crop_img = cv2.resize(crop_img, target_size)  # 将人脸缩放为正方形
     return crop_img
