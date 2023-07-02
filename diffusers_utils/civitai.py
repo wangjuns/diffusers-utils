@@ -3,7 +3,6 @@ from typing import Any, Dict
 def parse_civitai_prompt(text: str) -> Dict[str, str]:
     segments = text.split('Negative prompt:')
 
-
     prompt = {}
     prompt['prompt'] = segments[0].strip()
 
@@ -37,3 +36,15 @@ def to_diffusers_params(prompt:Dict[str, str]) -> Dict[str, Any]:
         "negative_prompt" : negative_prompt
     }
 
+def to_latents_params(prompt:Dict[str, str]) -> Dict[str, Any]:
+    seed = prompt.get('Seed', None)
+    if seed is not None:
+        seed = int(seed)
+
+    image_size = prompt.get('Size', None)
+    if image_size is not None:
+        image_size = (int(x) for x in image_size.split('x'))
+    return {
+        "the_seed" : seed,
+        "size" : image_size
+    }
