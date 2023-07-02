@@ -1,4 +1,6 @@
 from typing import Any, Dict
+from diffusers import DDIMScheduler,DPMSolverMultistepScheduler
+
 
 def parse_civitai_prompt(text: str) -> Dict[str, str]:
     segments = text.split('Negative prompt:')
@@ -48,3 +50,14 @@ def to_latents_params(prompt:Dict[str, str]) -> Dict[str, Any]:
         "the_seed" : seed,
         "size" : image_size
     }
+    
+
+def resovler_schduler(name:str):
+    if name is None:
+        return None
+
+    if name == 'DPM++ SDE Karras' or name == 'DPM++ 2M Karras' or name == 'DPM++ 2S a Karras':
+        return DPMSolverMultistepScheduler
+
+    print(f"Not supported sampler: {name}. Using default")
+    return None
