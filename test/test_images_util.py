@@ -19,9 +19,12 @@ class TestDict(unittest.TestCase):
         # result.show()
 
     def test_crop(self):
-        img = Image.open(f'test/318231715.jpeg')
+        img = Image.open(f'test/temp_image1.jpeg')
         img = images_util.crop_img(img, (512, 512))
-        cv2.imwrite("test/318231715_1.jpg", img)
+        
+        assert img is not None, "detect failed"
+        
+        cv2.imwrite("test/test_corp_out.jpg", img)
 
 
 if __name__ == '__main__':
