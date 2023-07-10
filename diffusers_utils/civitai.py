@@ -9,7 +9,7 @@ def parse_civitai_prompt(text: str) -> Dict[str, str]:
     prompt['prompt'] = segments[0].strip()
 
     segments = segments[1].split('\n')
-    prompt['negtive_prompt'] = segments[0].strip()
+    prompt['negative_prompt'] = segments[0].strip()
 
     segments = segments[1].split(',')
 
@@ -29,14 +29,23 @@ def to_diffusers_params(prompt:Dict[str, str]) -> Dict[str, Any]:
     guidance_scale = prompt.get('CFG scale', '7')
     guidance_scale = float(guidance_scale)
 
-    negative_prompt=prompt.get('negtive_prompt', None)
-
-    return {
+    negative_prompt=prompt.get('negative_prompt', None)
+    
+    result =  {
         "prompt" : prompt['prompt'],
         "num_inference_steps" : step,
         "guidance_scale" : guidance_scale,
         "negative_prompt" : negative_prompt
     }
+    
+    if 'Size' in prompt:
+        size = prompt['Size'].split('x')
+        assert len(size) == 2, f"wrong size format: {prompt['Size']}"
+        result['width'] = size[0]
+        result['height'] = size[1]
+        
+    return result
+        
 
 def to_latents_params(prompt:Dict[str, str]) -> Dict[str, Any]:
     seed = prompt.get('Seed', None)

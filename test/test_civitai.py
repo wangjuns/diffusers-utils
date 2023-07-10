@@ -18,9 +18,15 @@ ENSD: 31337, Size: 600x800, Seed: 1294305483, Model: braBeautifulRealistic_brav5
         result = civitai.parse_civitai_prompt(self.prompt)
 
         self.assertIn('prompt', result)
+        self.assertEqual('600x800', result['Size'])
 
     
-
+    def test_to_diffusers_params(self):
+        result = civitai.parse_civitai_prompt(self.prompt)
+        diffuser_params = civitai.to_diffusers_params(result)
+        
+        self.assertEqual('600', diffuser_params['width'])
+        self.assertEqual('800', diffuser_params['height'])
 
 if __name__ == '__main__':
     unittest.main()
